@@ -6,12 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataRetriever {
+
+    private final DBConnection dbConnection;
+
+    public DataRetriever(){
+        this.dbConnection = new DBConnection();
+    }
     public List<Category> getAllCategories() throws SQLException {
         List<Category> categories = new ArrayList<>();
 
         String sql = "SELECT id, name FROM product_category";
 
-        try (Connection conn = DBConnection.getDBConnection();
+        try (Connection conn = dbConnection.getDBConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -43,7 +49,7 @@ public class DataRetriever {
                 LIMIT ? OFFSET ?
                 """;
 
-        try (Connection conn = DBConnection.getDBConnection();
+        try (Connection conn = dbConnection.getDBConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, size);
@@ -117,7 +123,7 @@ public class DataRetriever {
             params.add(Timestamp.from(creationMax));
         }
 
-        try (Connection conn = DBConnection.getDBConnection();
+        try (Connection conn = dbConnection.getDBConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
             for (int i = 0; i < params.size(); i++) {
@@ -198,7 +204,7 @@ public class DataRetriever {
         params.add(size);
         params.add(offset);
 
-        try (Connection conn = DBConnection.getDBConnection();
+        try (Connection conn = dbConnection.getDBConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
             for (int i = 0; i < params.size(); i++) {
